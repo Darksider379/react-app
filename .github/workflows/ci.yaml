@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Use node JS 
         uses: actions/setup-node@v1
         with:
@@ -19,7 +24,7 @@ jobs:
       - run: npm test -- --coverage
         env:
           CI: true
-
+################ if IF condition is used in step, then these additional steps will run when event is push########
       - name: Build project
         if: github.event_name == 'push'
         run: npm run build
