@@ -15,6 +15,8 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Use node JS 
         uses: actions/setup-node@v1
         with:
@@ -24,10 +26,23 @@ jobs:
       - run: npm test -- --coverage
         env:
           CI: true
+  ##########Uploading artifacts from workflow to share between jobs#############################
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: public
+          path: public
 ################ if IF condition is used in step, then these additional steps will run when event is push########
       - name: Build project
         if: github.event_name == 'push'
         run: npm run build
+      - name: Upload build artifacts
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+###########You can use actions/download-artifacts@v1 to download artifacts#############
       - name: Deploy to staging
         if: github.event_name == 'push'
         run: npx surge --project ./build --domain alleged-join.surge.sh
