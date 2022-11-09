@@ -19,7 +19,7 @@ jobs:
       - run: npm test -- --coverage
         env:
           CI: true
-
+################ if IF condition is used in step, then these additional steps will run when event is push########
       - name: Build project
         if: github.event_name == 'push'
         run: npm run build
