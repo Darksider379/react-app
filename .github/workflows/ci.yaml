@@ -30,8 +30,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: artifact
-          path: target
+          name: public
+          path: public
 ################ if IF condition is used in step, then these additional steps will run when event is push########
       - name: Build project
         if: github.event_name == 'push'
