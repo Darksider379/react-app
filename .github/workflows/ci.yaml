@@ -63,15 +63,13 @@ jobs:
       - name: Open issue
         if: failure() && github.event_name == 'push'
         run: |
-
           curl --request POST\
           --url https://api.github.com/repos/${{ github.repository }}/issues \
-          --header 'authorization: Bearer ${{ github.TOKEN }}' \
+          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header 'content-Type: application/json' \
           --data '{
             "title": "Automated issue for commit: ${{ github.sha }}",
             "body": "This issue was automatically raised by github CI CD workflow **${{ github.workflow }}**",
-            "assignees": ["${{ github.event.push.user.login }}"]
-          }'
+            "assignees": ["${{ github.event.push.user.login }}"]}'
 
         
