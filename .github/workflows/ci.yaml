@@ -59,7 +59,7 @@ jobs:
       - name: Deploy to production
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: npx surge --project ./build --domain tearful-harbor.surge.sh
-############Open GITHUB issue if failure##################
+############Open GITHUB issue if failure###################
       - name: Open issue
         if: failure() && github.event_name == 'push'
         run: |
