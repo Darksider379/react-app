@@ -46,11 +46,11 @@ jobs:
           name: build
           path: build
   ############Create semantic release when event type is push to master branch##########################
-      - name: create a release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: npx semantic-release
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: create a release
+      #   if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      #   run: npx semantic-release
+      #   env: 
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ###########You can use actions/download-artifacts@v1 to download artifacts#############
       - name: Deploy to staging
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
