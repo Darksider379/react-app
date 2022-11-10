@@ -62,5 +62,16 @@ jobs:
 ############Open GITHUB issue if failure##################
       - name: Open issue
         if: failure() && github.event_name == 'push'
+        run: |
+
+          curl -X "POST" "https://api.github.com/repos/rickcogley/${{ github.repository }}/issues?state=all" \
+              -H "Cookie: logged_in=no" \
+              -H "Authorization: Bearer ${{ github.TOKEN }}" \
+              -H "Content-Type: text/plain; charset=utf-8" \
+              -d $'{
+            "title": "This issue was automatically created by CI CD pipeline",
+            "body": "TBD",
+            "assignees": ["${{ github.event.push.user.login }}"],
+          }'
 
         
