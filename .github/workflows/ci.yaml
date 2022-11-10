@@ -64,14 +64,14 @@ jobs:
         if: failure() && github.event_name == 'push'
         run: |
 
-          curl -X "POST" "https://api.github.com/repos/rickcogley/${{ github.repository }}/issues?state=all" \
-              -H "Cookie: logged_in=no" \
-              -H "Authorization: Bearer ${{ github.TOKEN }}" \
-              -H "Content-Type: text/plain; charset=utf-8" \
-              -d $'{
-            "title": "This issue was automatically created by CI CD pipeline",
-            "body": "TBD",
-            "assignees": ["${{ github.event.push.user.login }}"],
+          curl --request POST\
+          --url https://api.github.com/repos/${{ github.repository }}/issues \
+          --header 'authorization: Bearer ${{ github.TOKEN }}' \
+          --header 'content-Type: application/json' \
+          --data '{
+            "title": "Automated issue for commit: ${{ github.sha }}",
+            "body": "This issue was automatically raised by github CI CD workflow **${{ github.workflow }}**",
+            "assignees": ["${{ github.event.push.user.login }}"]
           }'
 
         
