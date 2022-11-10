@@ -32,10 +32,10 @@ jobs:
         with:
           name: public
           path: public
+  ##########Zipping artifacts#############################
       - name: zip assets
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: |
-          zip -r build.zip ./build 
+        run: zip -r build.zip ./build 
 ################ if IF condition is used in step, then these additional steps will run when event is push########
       - name: Build project
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
