@@ -1,0 +1,57 @@
+name: CI
+on:
+  pull_request:
+    branches: [develop, master]
+  push:
+    branches: [develop, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use node JS 
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: npm ci 
+      - run: npm run format:check
+      - run: npm test -- --coverage
+        env:
+          CI: true
+  ##########Uploading artifacts from workflow to share between jobs#############################
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: public
+          path: public
+################ if IF condition is used in step, then these additional steps will run when event is push########
+      - name: Build project
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npm run build
+      - name: Upload build artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+  ############Create semantic release when event type is push to master branch##########################
+      - name: create a release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx semantic-release
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+###########You can use actions/download-artifacts@v1 to download artifacts#############
+      - name: Deploy to staging
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: npx surge --project ./build --domain alleged-join.surge.sh
+        env: 
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
