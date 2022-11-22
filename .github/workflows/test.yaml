@@ -15,7 +15,7 @@ on:
 #ENV: ${{ github.event.inputs.environment }}
 
 jobs:
-  pipeline:
-  - name: print workflow dispatch variables
+  test_job:
     runs_on: ubuntu_latest
-    run: echo ${{ github.event.inputs.environment }}
+    steps:
+    - run: echo ${{ github.event.inputs.environment }}
