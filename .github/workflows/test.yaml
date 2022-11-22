@@ -1,0 +1,21 @@
+name: CI-CD pipeline
+
+on:
+  workflow_dispatch: 
+    inputs:
+      environment: 
+        type: choice
+        description: "Environment in which deployment needs to be done"
+        required: true
+        options:
+        - DEV
+        - QA
+        - PROD
+    
+#ENV: ${{ github.event.inputs.environment }}
+
+jobs:
+  pipeline:
+  - name: print workflow dispatch variables
+    runs_on: ubuntu_latest
+    run: echo ${{ github.event.inputs.environment }}
